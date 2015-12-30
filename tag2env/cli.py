@@ -9,9 +9,11 @@ AWS_INSTANCE_DOC_URL = 'http://169.254.169.254/latest/dynamic/instance-identity/
 
 
 class TagLoader(object):
-    def __init__(self, override_instance_doc=None, override_instance_id=None):
+    def __init__(self, override_instance_doc=None, override_instance_id=None,
+                 region=None):
         self._override_instance_doc = override_instance_doc
         self._override_instance_id = override_instance_id
+        self._region = region
 
     def load_tags(self):
         instance_id = None
@@ -20,6 +22,7 @@ class TagLoader(object):
         else:
             local_instance_document = self.local_instance_document
             instance_id = local_instance_document['instanceId']
+            self._region = local_instance_document['region']
         tags = {}
 
         for orig_tag_key, tag_value in self.load_tags_for_instance(instance_id):
@@ -54,13 +57,14 @@ class TagLoader(object):
 
     @property
     def client(self):
-        return boto3.client('ec2')
+        return boto3.client('ec2', region_name=self._region)
 
     @property
     def local_instance_document(self):
         if self._override_instance_doc:
             return self._override_instance_doc
-        return requests.get(AWS_INSTANCE_DOC_URL)
+        response = requests.get(AWS_INSTANCE_DOC_URL)
+        return response.json()
 
 
 def load_instances_tags(instance_id=None):
