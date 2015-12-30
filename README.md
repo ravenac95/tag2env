@@ -13,7 +13,7 @@ It turns your tags like:
 Into:
 
     EC2_TAG_NAME="my name"
-    EC2_SOME_TAG="this is a tag"
+    EC2_TAG_SOME_TAG="this is a tag"
 
 ## Usage
 
