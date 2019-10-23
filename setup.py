@@ -26,7 +26,7 @@ setup(
         "boto3==1.2.3",
         "python-json-logger==0.1.2",
         "click==5.0",
-        "requests==2.9.1",
+        "requests==2.20.0",
     ],
     entry_points={
         'console_scripts': [
